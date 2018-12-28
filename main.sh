@@ -17,5 +17,7 @@ run_commands_main() {
       test "$(docker wait "$id")" -eq 0
       docker commit "$id" "$IMG" > /dev/null
     done < "$LST"
+  else
+    echo "-----> run-commands file not found"
   fi
 }
