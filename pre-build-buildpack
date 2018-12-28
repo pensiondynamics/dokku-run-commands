@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+THIS_PATH=$(dirname "$0")
+
+. "$(dirname "$0")/main.sh"
+
+run_commands_main "$@"

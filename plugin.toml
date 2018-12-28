@@ -1,0 +1,4 @@
+[plugin]
+description = "run commands during docker build"
+version = "0.0.1"
+[plugin.config]
