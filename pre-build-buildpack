@@ -2,8 +2,26 @@
 
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
-THIS_PATH=$(dirname "$0")
+run_commands_main() {
+  local APP="$1"
+  local IMG="dokku/$APP"
+  local LST="/home/dokku/${APP}/run-commands"
 
-. "$(dirname "$0")/main.sh"
+  if [ -f "$LST" ] ; then
+    echo "-----> running commands from ${LST}..."
+
+    while read -rd $'\0' line ; do
+      echo "-----> running command"
+      echo "       ${line}"
+
+      id=$(docker run -i -a stdin "$IMG" /bin/bash -e -c "$line")
+
+      test "$(docker wait "$id")" -eq 0
+      docker commit "$id" "$IMG" > /dev/null
+    done < "$LST"
+  else
+    echo "-----> run-commands file not found"
+  fi
+}
 
 run_commands_main "$@"
